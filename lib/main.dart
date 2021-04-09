@@ -1,8 +1,10 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_natural_beamer/locations/books_location.dart';
-import 'package:flutter_app_natural_beamer/locations/messages_location.dart';
+import 'package:flutter_app_natural_beamer/locations/clubs_location.dart';
 import 'package:flutter_app_natural_beamer/locations/settings_location.dart';
+import 'package:flutter_app_natural_beamer/widgets/bottom_nav_bar_widget.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:flutter_app_natural_beamer/provider.dart';
@@ -12,7 +14,7 @@ void main() {
   runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookWidget {
   final _beamerKey = GlobalKey<BeamerState>();
 
   @override
@@ -28,10 +30,8 @@ class MyApp extends StatelessWidget {
                 locationBuilder: (state) {
                   if (state.uri.pathSegments.contains('books')) {
                     return BooksLocation(state);
-                  } else if (state.uri.pathSegments.contains('settings')){
-                    return SettingsLocation(state);
                   }
-                  return MessagesLocation(state);
+                  return ClubsLocation(state);
                 }
               ),
             ),
