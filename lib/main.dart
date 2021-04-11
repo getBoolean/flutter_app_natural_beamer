@@ -67,24 +67,8 @@ class BooksScreen extends StatelessWidget {
                     ),
                   ),
                 );
-              }
-            )
-            
-            
-            // ListView(
-            //   children: books
-            //       .map((book) => ListTile(
-            //             title: Text(book['title']),
-            //             subtitle: Text(book['author']),
-            //             onTap: () => Beamer.of(context).currentLocation.update(
-            //                   (state) => state.copyWith(
-            //                     pathBlueprintSegments: ['books', ':bookId'],
-            //                     pathParameters: {'bookId': book['id']},
-            //                   ),
-            //                 ),
-            //           ))
-            //       .toList(),
-            // ),
+              },
+            ),
           ),
         ],
       )
@@ -143,29 +127,11 @@ class ArticlesScreen extends StatelessWidget {
                         ':articleId'
                       ],
                       pathParameters: {'articleId': article['id']},
-                    )
+                    ),
                   ),
                 );
               },
-            )
-            
-            // ListView(
-            //   children: articles
-            //       .map((article) => ListTile(
-            //             title: Text(article['title']),
-            //             subtitle: Text(article['author']),
-            //             onTap: () => Beamer.of(context)
-            //                 .currentLocation
-            //                 .update((state) => state.copyWith(
-            //                       pathBlueprintSegments: [
-            //                         'articles',
-            //                         ':articleId'
-            //                       ],
-            //                       pathParameters: {'articleId': article['id']},
-            //                     )),
-            //           ))
-            //       .toList(),
-            // ),
+            ),
           ),
         ],
       ),
