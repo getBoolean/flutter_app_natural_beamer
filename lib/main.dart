@@ -41,20 +41,53 @@ class BooksScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Books'),
       ),
-      body: ListView(
-        children: books
-            .map((book) => ListTile(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text("Recommended"),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: books.length,
+              itemBuilder: (BuildContext context, int index) {
+                Map<String, String> book = books[index];
+                return ListTile(
                   title: Text(book['title']),
                   subtitle: Text(book['author']),
                   onTap: () => Beamer.of(context).currentLocation.update(
-                        (state) => state.copyWith(
-                          pathBlueprintSegments: ['books', ':bookId'],
-                          pathParameters: {'bookId': book['id']},
-                        ),
-                      ),
-                ))
-            .toList(),
-      ),
+                    (state) => state.copyWith(
+                      pathBlueprintSegments: ['books', ':bookId'],
+                      pathParameters: {'bookId': book['id']},
+                    ),
+                  ),
+                );
+              }
+            )
+            
+            
+            // ListView(
+            //   children: books
+            //       .map((book) => ListTile(
+            //             title: Text(book['title']),
+            //             subtitle: Text(book['author']),
+            //             onTap: () => Beamer.of(context).currentLocation.update(
+            //                   (state) => state.copyWith(
+            //                     pathBlueprintSegments: ['books', ':bookId'],
+            //                     pathParameters: {'bookId': book['id']},
+            //                   ),
+            //                 ),
+            //           ))
+            //       .toList(),
+            // ),
+          ),
+        ],
+      )
     );
   }
 }
@@ -81,19 +114,60 @@ class ArticlesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Articles')),
-      body: ListView(
-        children: articles
-            .map((article) => ListTile(
+      body: Column(
+        children: [
+          Container(
+            height: 40.0,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(4.0),
+                  width: 150.0,
+                  child: Text("Recommended"),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: articles.length,
+              itemBuilder: (BuildContext context, int index) {
+                Map<String, String> article = articles[index];
+                return ListTile(
                   title: Text(article['title']),
                   subtitle: Text(article['author']),
-                  onTap: () => Beamer.of(context)
-                      .currentLocation
-                      .update((state) => state.copyWith(
-                            pathBlueprintSegments: ['articles', ':articleId'],
-                            pathParameters: {'articleId': article['id']},
-                          )),
-                ))
-            .toList(),
+                  onTap: () => Beamer.of(context).currentLocation.update(
+                    (state) => state.copyWith(
+                      pathBlueprintSegments: [
+                        'articles',
+                        ':articleId'
+                      ],
+                      pathParameters: {'articleId': article['id']},
+                    )
+                  ),
+                );
+              },
+            )
+            
+            // ListView(
+            //   children: articles
+            //       .map((article) => ListTile(
+            //             title: Text(article['title']),
+            //             subtitle: Text(article['author']),
+            //             onTap: () => Beamer.of(context)
+            //                 .currentLocation
+            //                 .update((state) => state.copyWith(
+            //                       pathBlueprintSegments: [
+            //                         'articles',
+            //                         ':articleId'
+            //                       ],
+            //                       pathParameters: {'articleId': article['id']},
+            //                     )),
+            //           ))
+            //       .toList(),
+            // ),
+          ),
+        ],
       ),
     );
   }
