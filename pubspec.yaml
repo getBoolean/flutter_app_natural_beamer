@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  beamer: ^0.11.2
+  beamer: ^1.0.0-pre.1.0
   hooks_riverpod: ^0.14.0+1
   flutter_hooks: ^0.16.0
 
