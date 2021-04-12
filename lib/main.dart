@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // DATA
 const List<Map<String, String>> books = [
@@ -201,29 +203,23 @@ class ArticlesLocation extends BeamLocation {
       ];
 }
 
-// APP
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => MyAppState();
-}
-
-class MyAppState extends State<MyApp> {
-  int _currentIndex = 0;
+class MyApp extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final indexNotifier = useState(0);
     return MaterialApp.router(
       routeInformationParser: BeamerRouteInformationParser(),
       routerDelegate: RootRouterDelegate(
         homeBuilder: (context, state) {
           return Scaffold(
             body: IndexedStack(
-              index: _currentIndex,
+              index: indexNotifier.value,
               children: [
                 Beamer(
                   routerDelegate: BeamerRouterDelegate(
                     locationBuilder: (state) => ArticlesLocation(state),
-                  ),
+                  )
                 ),
                 Container(
                   color: Colors.blueAccent,
@@ -231,18 +227,18 @@ class MyAppState extends State<MyApp> {
                   child: Beamer(
                     routerDelegate: BeamerRouterDelegate(
                       locationBuilder: (state) => BooksLocation(state),
-                    ),
+                    )
                   ),
                 ),
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(
-              currentIndex: _currentIndex,
+              currentIndex: indexNotifier.value,
               items: [
                 BottomNavigationBarItem(label: 'A', icon: Icon(Icons.article)),
                 BottomNavigationBarItem(label: 'B', icon: Icon(Icons.book)),
               ],
-              onTap: (index) => setState(() => _currentIndex = index),
+              onTap: (index) => indexNotifier.value = index,
             ),
           );
         },
@@ -252,5 +248,5 @@ class MyAppState extends State<MyApp> {
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
