@@ -204,45 +204,45 @@ class ArticlesLocation extends BeamLocation {
 }
 
 class MyApp extends HookWidget {
-
   @override
   Widget build(BuildContext context) {
     final indexNotifier = useState(0);
-    return MaterialApp.router(
-      routeInformationParser: BeamerRouteInformationParser(),
-      routerDelegate: RootRouterDelegate(
-        homeBuilder: (context, state) {
-          return Scaffold(
-            body: IndexedStack(
-              index: indexNotifier.value,
-              children: [
-                Beamer(
+    final _routerDelegate = RootRouterDelegate(
+      homeBuilder: (context, state) {
+        return Scaffold(
+          body: IndexedStack(
+            index: indexNotifier.value,
+            children: [
+              Beamer(
                   routerDelegate: BeamerRouterDelegate(
                     locationBuilder: (state) => ArticlesLocation(state),
                   )
-                ),
-                Container(
-                  color: Colors.blueAccent,
-                  padding: const EdgeInsets.all(32.0),
-                  child: Beamer(
+              ),
+              Container(
+                color: Colors.blueAccent,
+                padding: const EdgeInsets.all(32.0),
+                child: Beamer(
                     routerDelegate: BeamerRouterDelegate(
                       locationBuilder: (state) => BooksLocation(state),
                     )
-                  ),
                 ),
-              ],
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: indexNotifier.value,
-              items: [
-                BottomNavigationBarItem(label: 'A', icon: Icon(Icons.article)),
-                BottomNavigationBarItem(label: 'B', icon: Icon(Icons.book)),
-              ],
-              onTap: (index) => indexNotifier.value = index,
-            ),
-          );
-        },
-      ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: indexNotifier.value,
+            items: [
+              BottomNavigationBarItem(label: 'A', icon: Icon(Icons.article)),
+              BottomNavigationBarItem(label: 'B', icon: Icon(Icons.book)),
+            ],
+            onTap: (index) => indexNotifier.value = index,
+          ),
+        );
+      },
+    );
+    return MaterialApp.router(
+      routeInformationParser: BeamerRouteInformationParser(),
+      routerDelegate: _routerDelegate,
     );
   }
 }
