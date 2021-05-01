@@ -264,10 +264,19 @@ class _AppScreenState extends State<AppScreen> {
           BottomNavigationBarItem(label: 'B', icon: Icon(Icons.book)),
         ],
         onTap: (index) {
-          setState(() => _currentIndex = index);
-          _routerDelegates[_currentIndex].parent?.updateRouteInformation(
+          if (_currentIndex == index) {
+            // setState(() => _currentIndex = index);
+            _routerDelegates[_currentIndex].beamToNamed(widget.beamState.uri.path);
+            // _routerDelegates[_currentIndex].parent?.updateRouteInformation(
+            //     _routerDelegates[_currentIndex].currentLocation.state.uri,
+            //   );
+          } else {
+            setState(() => _currentIndex = index);
+            _routerDelegates[_currentIndex].parent?.updateRouteInformation(
                 _routerDelegates[_currentIndex].currentLocation.state.uri,
               );
+          }
+          
         },
       ),
     );
@@ -280,13 +289,14 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  final beamerRouter = BeamerRouterDelegate(
+        locationBuilder: (state) => HomeLocation(state));
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routeInformationParser: BeamerRouteInformationParser(),
-      routerDelegate: BeamerRouterDelegate(
-        locationBuilder: (state) => HomeLocation(state),
-      ),
+      routerDelegate: beamerRouter,
     );
   }
 }
