@@ -159,6 +159,21 @@ class ArticleDetailsScreen extends StatelessWidget {
 }
 
 // LOCATIONS
+class HomeLocation extends BeamLocation {
+  HomeLocation(state) : super(state);
+
+  @override
+  List<String> get pathBlueprints => ['/*'];
+
+  @override
+  List<BeamPage> pagesBuilder(BuildContext context, BeamState state) => [
+        BeamPage(
+          key: ValueKey('app-${state.uri}'),
+          child: AppScreen(beamState: state),
+        ),
+      ];
+}
+
 class BooksLocation extends BeamLocation {
   BooksLocation(BeamState state) : super(state);
 
@@ -203,46 +218,75 @@ class ArticlesLocation extends BeamLocation {
       ];
 }
 
-class MyApp extends HookWidget {
+
+// APP
+class AppScreen extends StatefulWidget {
+  AppScreen({this.beamState});
+
+  final BeamState beamState;
+
+  @override
+  _AppScreenState createState() => _AppScreenState();
+}
+
+class _AppScreenState extends State<AppScreen> {
+  final _routerDelegates = [
+    BeamerRouterDelegate(
+      locationBuilder: (state) => ArticlesLocation(state),
+    ),
+    BeamerRouterDelegate(
+      locationBuilder: (state) => BooksLocation(state),
+    ),
+  ];
+
+  int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.beamState.uri.path.contains('books') ? 1 : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final indexNotifier = useState(0);
-    final _routerDelegate = RootRouterDelegate(
-      homeBuilder: (context, state) {
-        return Scaffold(
-          body: IndexedStack(
-            index: indexNotifier.value,
-            children: [
-              Beamer(
-                  routerDelegate: BeamerRouterDelegate(
-                    locationBuilder: (state) => ArticlesLocation(state),
-                  )
-              ),
-              Container(
-                color: Colors.blueAccent,
-                padding: const EdgeInsets.all(32.0),
-                child: Beamer(
-                    routerDelegate: BeamerRouterDelegate(
-                      locationBuilder: (state) => BooksLocation(state),
-                    )
-                ),
-              ),
-            ],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: indexNotifier.value,
-            items: [
-              BottomNavigationBarItem(label: 'A', icon: Icon(Icons.article)),
-              BottomNavigationBarItem(label: 'B', icon: Icon(Icons.book)),
-            ],
-            onTap: (index) => indexNotifier.value = index,
-          ),
-        );
-      },
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          Beamer(routerDelegate: _routerDelegates[0]),
+          Beamer(routerDelegate: _routerDelegates[1]),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(label: 'A', icon: Icon(Icons.article)),
+          BottomNavigationBarItem(label: 'B', icon: Icon(Icons.book)),
+        ],
+        onTap: (index) {
+          setState(() => _currentIndex = index);
+          _routerDelegates[_currentIndex].parent?.updateRouteInformation(
+                _routerDelegates[_currentIndex].currentLocation.state.uri,
+              );
+        },
+      ),
     );
+  }
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp.router(
       routeInformationParser: BeamerRouteInformationParser(),
-      routerDelegate: _routerDelegate,
+      routerDelegate: BeamerRouterDelegate(
+        locationBuilder: (state) => HomeLocation(state),
+      ),
     );
   }
 }
