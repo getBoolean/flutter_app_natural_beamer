@@ -265,18 +265,13 @@ class _AppScreenState extends State<AppScreen> {
         ],
         onTap: (index) {
           if (_currentIndex == index) {
-            // setState(() => _currentIndex = index);
             _routerDelegates[_currentIndex].beamToNamed(widget.beamState.uri.path);
-            // _routerDelegates[_currentIndex].parent?.updateRouteInformation(
-            //     _routerDelegates[_currentIndex].currentLocation.state.uri,
-            //   );
           } else {
             setState(() => _currentIndex = index);
             _routerDelegates[_currentIndex].parent?.updateRouteInformation(
                 _routerDelegates[_currentIndex].currentLocation.state.uri,
-              );
+            );
           }
-          
         },
       ),
     );
